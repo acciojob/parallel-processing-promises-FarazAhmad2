@@ -1,4 +1,3 @@
-//your JS code here. If required.
 const output = document.getElementById("output");
 const btn = document.getElementById("download-images-button");
 
@@ -9,16 +8,15 @@ const images = [
 ];
 
 btn.addEventListener('click', function() {
-  
   const outputDiv = document.getElementById('output');
+  outputDiv.innerHTML = ''; // Clear previous images
 
   // Map each image URL to a Promise that loads the image
   const promises = images.map(image => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = function() {
-        // Append the image to the output div
-        outputDiv.appendChild(img);
+        // Resolve the promise with the loaded image
         resolve(img);
       };
       img.onerror = function() {
@@ -31,10 +29,13 @@ btn.addEventListener('click', function() {
   // Use Promise.all() to wait for all images to be loaded
   Promise.all(promises)
     .then(downloadedImages => {
+      // Once all images are loaded, append them to the output div
+      downloadedImages.forEach(img => {
+        outputDiv.appendChild(img);
+      });
       console.log('All images downloaded successfully:', downloadedImages);
     })
     .catch(error => {
       console.error('Error downloading images:', error);
     });
 });
-
